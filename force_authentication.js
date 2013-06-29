@@ -21,11 +21,11 @@ function force_authentication_device_connected() {
 /**
  * Implements force_authentication hook_services_success().
  */
-function force_authentication_services_success(url, data) {
+function force_authentication_services_success(options, data) {
   try {
     // When the user login service resource is successful, set the front page
     // back to its original value.
-    if (url == 'user/login.json' || url == 'drupalgap_user/login.json') {
+    if ((options.service == 'user' || options.service == 'drupalgap_user') && options.resource == 'login') {
       drupalgap.settings.front = force_authentication_front_page;
     }
   }
