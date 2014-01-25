@@ -15,18 +15,16 @@ this in your settings.js file:
 
 `
 drupalgap.settings.blocks.my_theme = {
-
   navigation: {
-
     main_menu: {
       roles: {
         value: ['anonymous user'],
         mode: 'exclude',
       }
     },
-  },
-
+  }
 };
 `
+
 To learn more about themes, regions and blocks, visit the DrupalGap getting
 started guide: http://www.drupalgap.org/get-started
