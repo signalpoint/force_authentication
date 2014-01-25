@@ -1,36 +1,41 @@
 var force_authentication_front_page;
 
 /**
- * Implements hook_device_connected().
+ * Implements hook_deviceready().
  */
-function force_authentication_device_connected() {
+function force_authentication_deviceready() {
   try {
     // When the device is connected, if the user is anonymous save a backup of
     // the path to the front page, then set the front page path to the user
     // login page.
-    if (drupalgap.user.uid == 0) {
+    if (Drupal.user.uid == 0) {
       force_authentication_front_page = drupalgap.settings.front;
       drupalgap.settings.front = 'user/login';
     }
   }
   catch (error) {
-    alert('force_authentication_deviceready - ' + error);
+    console.log('force_authentication_deviceready - ' + error);
   }
 }
 
 /**
- * Implements force_authentication hook_services_success().
+ * Implements hook_services_postprocess().
  */
-function force_authentication_services_success(options, data) {
+function force_authentication_services_postprocess(options, result) {
   try {
     // When the user login service resource is successful, set the front page
     // back to its original value.
-    if ((options.service == 'user' || options.service == 'drupalgap_user') && options.resource == 'login') {
-      drupalgap.settings.front = force_authentication_front_page;
+    if (options.service == 'user') {
+      if (options.resource == 'login') {
+        drupalgap.settings.front = force_authentication_front_page;
+      }
+      else if (options.resource == 'logout') {
+        drupalgap.settings.front = 'user/login';
+      }
     }
   }
   catch (error) {
-    alert('force_authentication_services_success - ' + error);
+    console('force_authentication_services_postprocess - ' + error);
   }
 }
 
