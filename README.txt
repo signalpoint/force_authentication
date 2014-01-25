@@ -1,5 +1,5 @@
 A DrupalGap module that sends anonymous users to the App's login page when the
-app first loads.
+app first loads. Also send users back to the login page when they logout.
 
 Setup
 =====
@@ -13,33 +13,23 @@ For exapmle, you probably don't want the main menu to show up for anonymous
 users if you are going to force authentication. So you could do something like
 this in your settings.js file:
 
-drupalgap.settings = {
+`
+drupalgap.settings.blocks.my_theme = {
 
   /* ... */
 
-  'blocks':{
+  navigation: {
 
-    'my_theme_name':{ /* the machine name of your theme */
-
-      'sub_navigation':{ /* the machine name of the theme's region */
-      
-        'main_menu':{ /* the machine name of the menu */
-          
-          /* hide main menu from anonymous users */
-          'roles':{
-            'value':['anonymous user'],
-            'mode':'exclude',
-          }
-          
-        },
-
+    main_menu: {
+      roles: {
+        value: ['anonymous user'],
+        mode: 'exclude',
       }
-
     },
-
   },
 
   /* ... */
 
 };
+`
 
