@@ -14,6 +14,7 @@ users if you are going to force authentication. So you could do something like
 this in your settings.js file:
 
 `
+
 drupalgap.settings.blocks.my_theme = {
   navigation: {
     main_menu: {
@@ -21,9 +22,10 @@ drupalgap.settings.blocks.my_theme = {
         value: ['anonymous user'],
         mode: 'exclude',
       }
-    },
+    }
   }
 };
+
 `
 
 To learn more about themes, regions and blocks, visit the DrupalGap getting
