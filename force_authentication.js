@@ -1,20 +1,34 @@
 var force_authentication_front_page;
 
 /**
- * Implements hook_deviceready().
+ * Implements hook_install().
  */
-function force_authentication_deviceready() {
+function force_authentication_install() {
   try {
-    // When the device is connected, if the user is anonymous save a backup of
-    // the path to the front page, then set the front page path to the user
-    // login page.
-    if (Drupal.user.uid == 0) {
-      force_authentication_front_page = drupalgap.settings.front;
+    force_authentication_front_page = drupalgap.settings.front;
+  }
+  catch (error) { console.log('force_authentication_install - ' + error); }
+}
+
+/**
+ * Implements hook_services_preprocess().
+ */
+ function force_authentication_services_request_pre_postprocess_alter(options, result) {
+  try {
+    // On a system connect preprocess, there is no guarantee the Drupal.user
+    // object is accurate yet, so we need to look at the user object bundled in
+    // the result instead.
+    
+    // Whenever a system connect is performed, check for anonymous users, if
+    // they are anonymous, set the front page to the user login form.
+    if (options.service == 'system' && options.resource == 'connect' &&
+      result.user.uid == 0
+    ) {
       drupalgap.settings.front = 'user/login';
     }
   }
   catch (error) {
-    console.log('force_authentication_deviceready - ' + error);
+    console.log('force_authentication_services_request_pre_postprocess_alter - ' + error);
   }
 }
 
