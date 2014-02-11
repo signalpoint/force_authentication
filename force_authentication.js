@@ -11,7 +11,7 @@ function force_authentication_install() {
 }
 
 /**
- * Implements hook_services_preprocess().
+ * Implements hook_services_request_pre_postprocess_alter().
  */
  function force_authentication_services_request_pre_postprocess_alter(options, result) {
   try {
