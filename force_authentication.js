@@ -1,6 +1,16 @@
 var force_authentication_front_page;
 
 /**
+ * Use this hook to alter the front page path for authenticated users.
+ */
+function hook_force_authentication_alter(options, result) {
+  try {
+    drupalgap.settings.front = 'my_welcome_screen';
+  }
+  catch (error) { console.log('hook_force_authentication_alter - ' + error); }
+}
+
+/**
  * Implements hook_install().
  */
 function force_authentication_install() {
@@ -21,10 +31,9 @@ function force_authentication_install() {
     
     // Whenever a system connect is performed, check for anonymous users, if
     // they are anonymous, set the front page to the user login form.
-    if (options.service == 'system' && options.resource == 'connect' &&
-      result.user.uid == 0
-    ) {
-      drupalgap.settings.front = 'user/login';
+    if (options.service == 'system' && options.resource == 'connect') {
+      if (result.user.uid == 0) { drupalgap.settings.front = 'user/login'; }
+      else { module_invoke_all('force_authentication_alter', options, result); }
     }
   }
   catch (error) {
@@ -42,6 +51,7 @@ function force_authentication_services_postprocess(options, result) {
     if (options.service == 'user') {
       if (options.resource == 'login') {
         drupalgap.settings.front = force_authentication_front_page;
+        module_invoke_all('force_authentication_alter', options, result);
       }
       else if (options.resource == 'logout') {
         drupalgap.settings.front = 'user/login';
