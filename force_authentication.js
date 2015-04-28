@@ -46,16 +46,20 @@ function force_authentication_install() {
  */
 function force_authentication_services_postprocess(options, result) {
   try {
+    var success = function() {
+      drupalgap.settings.front = force_authentication_front_page;
+      module_invoke_all('force_authentication_alter', options, result);
+    }
     // When the user login service resource is successful, set the front page
     // back to its original value.
     if (options.service == 'user') {
-      if (options.resource == 'login') {
-        drupalgap.settings.front = force_authentication_front_page;
-        module_invoke_all('force_authentication_alter', options, result);
-      }
+      if (options.resource == 'login') { success(); }
       else if (options.resource == 'logout') {
         drupalgap.settings.front = 'user/login';
       }
+    }
+    else if (options.service == 'fboauth' && options.resource == 'connect') {
+      success();
     }
   }
   catch (error) {
